@@ -1,0 +1,150 @@
+/* Game (scorecard) page. Everything is scoped under .game-page. */
+.game-page {
+  --navy-900: #0b1f47;
+  --navy-700: #0f2d65;
+  --navy-500: #17408b;
+  --red: #c9082a;
+  --amber: #ffb020;
+  --line: #e3e8f2;
+  --card-shadow: 0 1px 2px rgba(15, 45, 101, 0.08), 0 8px 24px rgba(15, 45, 101, 0.08);
+}
+
+.game-page .back-link { display: inline-block; margin-bottom: 0.25rem; color: var(--navy-500); font-weight: 600; text-decoration: none; }
+.game-page .back-link:hover { text-decoration: underline; }
+
+.game-page .num { text-align: right; font-variant-numeric: tabular-nums; }
+.game-page th.plain { background: none; font-weight: 500; }
+
+/* ---------- Scoreboard ---------- */
+.game-page .scoreboard {
+  position: relative; overflow: hidden;
+  display: grid; grid-template-columns: 1fr auto 1fr; align-items: center; gap: 1rem;
+  margin: 0.75rem 0 1rem; padding: 1.6rem 2rem; color: #fff; border-radius: 16px;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255, 255, 255, 0.14), transparent 60%),
+    linear-gradient(135deg, var(--navy-900), var(--navy-500));
+  box-shadow: 0 10px 30px rgba(15, 45, 101, 0.35);
+}
+.game-page .scoreboard::before {
+  content: ''; position: absolute; left: 50%; top: 50%; width: 240px; height: 240px;
+  border: 2px solid rgba(255, 255, 255, 0.08); border-radius: 50%; transform: translate(-50%, -50%); pointer-events: none;
+}
+.game-page .sb-team { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.1rem; text-align: center; }
+.game-page .sb-label { font-size: 0.7rem; letter-spacing: 0.3em; text-transform: uppercase; color: #9db2dd; }
+.game-page .sb-name { font-size: clamp(1rem, 2.4vw, 1.5rem); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.game-page .sb-score {
+  font-size: clamp(3.2rem, 9vw, 5.6rem); font-weight: 800; line-height: 1.05; font-variant-numeric: tabular-nums;
+  opacity: 0.6; transition: opacity 0.3s, text-shadow 0.3s;
+}
+.game-page .sb-team.leading .sb-score,
+.game-page .scoreboard.tied .sb-score { opacity: 1; }
+.game-page .sb-team.leading .sb-score { text-shadow: 0 0 26px rgba(255, 255, 255, 0.5); }
+.game-page .sb-center { position: relative; display: flex; flex-direction: column; align-items: center; gap: 0.4rem; max-width: 15rem; text-align: center; font-size: 0.8rem; color: #c5d2ee; }
+
+.game-page .badge { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.2rem 0.8rem; border-radius: 999px; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: #fff; background: rgba(255, 255, 255, 0.18); }
+.game-page .badge-InProgress { background: var(--red); }
+.game-page .badge-InProgress::before { content: ''; width: 0.5rem; height: 0.5rem; border-radius: 50%; background: #fff; animation: pulse 1.4s ease-in-out infinite; }
+.game-page .badge-Final { background: rgba(255, 255, 255, 0.28); }
+@keyframes pulse { 50% { opacity: 0.25; transform: scale(0.7); } }
+
+/* ---------- Clock console ---------- */
+.game-page .game-clock {
+  display: flex; flex-wrap: wrap; justify-content: space-around; align-items: flex-start; gap: 1.25rem 2rem;
+  margin: 0 0 1rem; padding: 1.1rem 1.5rem; color: #fff; border-radius: 16px;
+  background: linear-gradient(180deg, #16223d, #0d172b); box-shadow: var(--card-shadow);
+}
+.game-page .clock-block { display: flex; flex-direction: column; align-items: center; gap: 0.5rem; }
+.game-page .clock-label { font-size: 0.7rem; letter-spacing: 0.25em; text-transform: uppercase; color: #8da2cc; }
+.game-page .clock-digits {
+  min-width: 5.6rem; padding: 0.1rem 0.9rem; text-align: center; border-radius: 10px;
+  font: 700 2.6rem/1.25 ui-monospace, Menlo, Consolas, monospace; letter-spacing: 0.05em; font-variant-numeric: tabular-nums;
+  color: var(--amber); background: #050b18; box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.7);
+  text-shadow: 0 0 10px rgba(255, 176, 32, 0.45); transition: text-shadow 0.2s;
+}
+.game-page .clock-digits.running { text-shadow: 0 0 18px rgba(255, 176, 32, 0.9); }
+.game-page .clock-digits.quarter { min-width: 4.2rem; font-size: 2.2rem; color: #fff; text-shadow: none; }
+.game-page .clock-digits.shot { min-width: 3.6rem; color: #ff5a5a; text-shadow: 0 0 10px rgba(255, 90, 90, 0.5); }
+.game-page .clock-digits.shot.low { animation: blink 1s steps(2, start) infinite; }
+@keyframes blink { to { visibility: hidden; } }
+.game-page .clock-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.4rem; }
+.game-page .clock-note { flex-basis: 100%; margin: 0; text-align: center; color: #ff8d8d; font-weight: 600; }
+
+.game-page .game-clock button,
+.game-page .game-clock select {
+  padding: 0.4rem 0.95rem; font-size: 0.9rem; font-weight: 600; color: #fff; cursor: pointer;
+  background: rgba(255, 255, 255, 0.1); border: 1px solid rgba(255, 255, 255, 0.22); border-radius: 999px;
+  transition: background 0.15s, transform 0.1s;
+}
+.game-page .game-clock select option { color: #111; }
+.game-page .game-clock button:hover:not(:disabled) { background: rgba(255, 255, 255, 0.2); }
+.game-page .game-clock button:active:not(:disabled) { transform: scale(0.95); }
+.game-page .game-clock button.primary { background: #1fa95b; border-color: #1fa95b; }
+.game-page .game-clock button.primary:hover:not(:disabled) { background: #178a49; }
+.game-page .game-clock button:disabled,
+.game-page .game-clock select:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Undo / Finish ---------- */
+.game-page .scorecard-controls { display: flex; flex-wrap: wrap; align-items: center; gap: 0.6rem; margin: 0 0 1.25rem; }
+.game-page .btn { padding: 0.5rem 1.2rem; font-weight: 600; color: var(--ink, #1d1d1f); cursor: pointer; background: #fff; border: 1px solid #c7ccd6; border-radius: 999px; transition: border-color 0.15s, color 0.15s, background 0.15s; }
+.game-page .btn:hover:not(:disabled) { color: var(--navy-500); border-color: var(--navy-500); }
+.game-page .btn-danger { color: var(--red); border-color: var(--red); }
+.game-page .btn-danger:hover:not(:disabled) { color: #fff; background: var(--red); border-color: var(--red); }
+.game-page .btn:disabled { opacity: 0.45; cursor: not-allowed; }
+
+/* ---------- Team cards ---------- */
+.game-page .scorecard-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.25rem; align-items: start; }
+.game-page .scorecard-team { overflow: hidden; background: #fff; border-top: 5px solid var(--navy-500); border-radius: 14px; box-shadow: var(--card-shadow); }
+.game-page .scorecard-team.team-home { border-top-color: var(--red); }
+.game-page .scorecard-team h3 { display: flex; align-items: center; justify-content: space-between; gap: 0.75rem; margin: 0; padding: 1rem 1.25rem; font-size: 1.15rem; }
+.game-page .scorecard-team h3 a { color: var(--navy-900); font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase; text-decoration: none; }
+.game-page .scorecard-team h3 a:hover { text-decoration: underline; }
+.game-page .chip { padding: 0.15rem 0.7rem; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: #fff; background: var(--navy-500); border-radius: 999px; }
+.game-page .team-home .chip { background: var(--red); }
+.game-page .scorecard-team p { margin: 0; padding: 0 1.25rem 1rem; }
+
+.game-page .scorecard-team table { border-radius: 0; }
+.game-page .scorecard-team th,
+.game-page .scorecard-team td { padding: 0.5rem 0.9rem; border-bottom: 1px solid var(--line); }
+.game-page .scorecard-team thead th { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; background: #f6f8fc; }
+.game-page .scorecard-team tbody tr:hover { background: #f5f8ff; }
+.game-page .scorecard-team tr.scored { background: #eef4ff; }
+.game-page .scorecard-team tr.scored th[scope='row'] { font-weight: 700; box-shadow: inset 3px 0 0 var(--navy-500); }
+.game-page .scorecard-team tr.scored td:nth-child(2) { font-weight: 800; color: var(--navy-500); }
+.game-page .scorecard-team tfoot th,
+.game-page .scorecard-team tfoot td { font-weight: 800; background: #f6f8fc; border-top: 2px solid #d5dcec; border-bottom: 0; }
+.game-page .actions { white-space: nowrap; }
+
+.game-page .score-btn {
+  min-width: 2.6rem; margin-left: 0.3rem; padding: 0.3rem 0.6rem; font-weight: 700; cursor: pointer;
+  color: var(--navy-500); background: #fff; border: 1.5px solid var(--navy-500); border-radius: 999px;
+  transition: background 0.12s, color 0.12s, transform 0.08s;
+}
+.game-page .score-btn.three { color: #fff; background: var(--navy-500); }
+.game-page .score-btn:hover:not(:disabled) { color: #fff; background: var(--navy-700); border-color: var(--navy-700); }
+.game-page .score-btn:active:not(:disabled) { transform: scale(0.92); }
+.game-page .score-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+
+/* ---------- Scoring history ---------- */
+.game-page .scoring-history { margin-top: 1.5rem; padding: 1.1rem 1.25rem; background: #fff; border-radius: 14px; box-shadow: var(--card-shadow); }
+.game-page .scoring-history h3 { margin: 0 0 0.7rem; font-size: 0.95rem; letter-spacing: 0.12em; text-transform: uppercase; color: var(--navy-700); }
+.game-page .scoring-history table { border-radius: 8px; }
+.game-page .scoring-history thead th { font-size: 0.72rem; letter-spacing: 0.08em; text-transform: uppercase; color: #6b7280; background: #f6f8fc; }
+.game-page .scoring-history td, .game-page .scoring-history th { border-bottom: 1px solid var(--line); }
+.game-page .scoring-history tbody tr:first-child td { background: #fff8e6; }
+.game-page .time-cell { font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 0.9rem; color: #4b5563; white-space: nowrap; }
+.game-page .pill { display: inline-block; min-width: 2rem; padding: 0.05rem 0.5rem; font-size: 0.8rem; font-weight: 700; text-align: center; color: #fff; border-radius: 999px; }
+.game-page .pill-2 { background: #5b7fc7; }
+.game-page .pill-3 { background: var(--red); }
+.game-page .link-btn { margin-top: 0.7rem; padding: 0; font-size: 0.9rem; font-weight: 600; color: var(--navy-500); cursor: pointer; background: none; border: 0; }
+.game-page .link-btn:hover { text-decoration: underline; }
+
+/* ---------- Small screens ---------- */
+@media (max-width: 900px) {
+  .game-page .scorecard-grid { grid-template-columns: 1fr; }
+}
+@media (max-width: 640px) {
+  .game-page .scoreboard { grid-template-columns: 1fr 1fr; padding: 1.25rem 1rem; }
+  .game-page .sb-center { grid-column: 1 / -1; grid-row: 2; max-width: none; }
+  .game-page .game-clock { padding: 1rem; }
+  .game-page .clock-digits { font-size: 2.1rem; min-width: 4.6rem; }
+}
