@@ -77,6 +77,17 @@ Open http://localhost:5173.
 3. Click **Scorecard** on a game to open the play-by-play page.
 4. Use **Start/Pause**, the shot clock and the quarter selector, press **+2** or **+3** next to a player to record a basket, **Undo last** to take it back, and **Finish game** to lock the score. Recent plays appear at the bottom.
 
+## Help chat (optional)
+
+The 💬 button in the bottom-right corner opens an FAQ assistant that runs entirely on your machine using [Ollama](https://ollama.com). To enable it:
+
+```bash
+ollama pull llama3.2:3b     # one-time, about 2 GB
+ollama serve                # skip if the Ollama app is already running
+```
+
+Then restart the backend. The answers come from [backend/Nba.Api/Chat/faq.md](backend/Nba.Api/Chat/faq.md); edit that file to add or change FAQs. To use another model, change `Chat:Model` in `appsettings.json`.
+
 ## Database script (optional)
 
 The app creates its own tables on first start, so you normally don't need this. If you'd rather set up the database yourself (or you're a DBA), run [db/schema.sql](db/schema.sql). It creates the tables, indexes and constraints, and is safe to run more than once. It contains no data.
@@ -109,6 +120,7 @@ cd frontend && npm test                      # frontend
 | Console shows `401 Unauthenticated` | The API key or client ID is wrong or expired. |
 | Frontend shows a network error | The backend isn't running on port 5080. |
 | Port 5080 or 5173 already in use | Stop the other program using it. |
+| Help chat says "Could not reach Ollama" | Start Ollama (`ollama serve`) and make sure the model is pulled (`ollama pull llama3.2:3b`). |
 
 ## Sharing the project
 

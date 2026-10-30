@@ -1,4 +1,5 @@
 import type {
+  ChatMessage,
   Game,
   GameInput,
   GameStatus,
@@ -52,6 +53,10 @@ const qs = (params: Record<string, string | number | boolean | undefined>) => {
 };
 
 export const api = {
+  chat: {
+    ask: (messages: ChatMessage[]) =>
+      request<{ reply: string }>('/api/chat', json('POST', { messages })),
+  },
   teams: {
     list: () => request<Team[]>('/api/teams'),
     get: (id: number) => request<Team>(`/api/teams/${id}`),

@@ -118,3 +118,8 @@ export type GameInput = Pick<
   Game,
   'season' | 'gameDate' | 'arena' | 'status' | 'homeTeamId' | 'awayTeamId' | 'homeScore' | 'awayScore'
 >;
+
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+}

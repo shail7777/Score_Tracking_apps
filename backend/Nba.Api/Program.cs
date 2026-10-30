@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Nba.Api.Chat;
 using Nba.Api.Data;
 using Nba.Api.Import;
 using Nba.Api.Services;
@@ -21,6 +22,15 @@ builder.Services.AddScoped<IGameService, GameService>();
 builder.Services.AddScoped<ScorecardService>();
 builder.Services.AddScoped<ScoringService>();
 builder.Services.AddHostedService<NbaImportHostedService>();
+
+builder.Services.Configure<ChatOptions>(builder.Configuration.GetSection("Chat"));
+var chatOptions = builder.Configuration.GetSection("Chat").Get<ChatOptions>() ?? new ChatOptions();
+builder.Services.AddHttpClient<IChatModelClient, OllamaChatClient>(c =>
+{
+    c.BaseAddress = new Uri(chatOptions.OllamaUrl);
+    c.Timeout = TimeSpan.FromSeconds(chatOptions.TimeoutSeconds);
+});
+builder.Services.AddSingleton<FaqChatService>();
 
 builder.Services.AddControllers()
     .AddJsonOptions(o => o.JsonSerializerOptions.Converters.Add(new System.Text.Json.Serialization.JsonStringEnumConverter()));

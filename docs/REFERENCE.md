@@ -87,6 +87,10 @@ Backend tests (`backend/Nba.Api.Tests`) cover the services directly, plus the co
 | GET/POST | `/api/games?teamId=&status=&season=` | List / create games (previous: newest first; upcoming: soonest first) |
 | GET/PUT/DELETE | `/api/games/{id}` | Get / update / delete |
 | GET | `/health` | Health check (includes DB) |
+| POST | `/api/chat` | FAQ assistant: `{ messages: [{ role: "user" \| "assistant", content }] }` (last must be `user`) returns `{ reply }`. 400 invalid input, 503 if Ollama isn't reachable |
+
+## Chat assistant (local AI)
+`Chat/faq.md` is the knowledge base. `FaqChatService` puts it in a system prompt that tells the model to answer only from the FAQ, then sends it with the recent conversation to a local [Ollama](https://ollama.com) model (`OllamaChatClient`, `POST /api/chat` on Ollama, non-streaming). Nothing leaves your machine. To change what it knows, edit `Chat/faq.md` and restart the backend. Settings live under `Chat` in `appsettings.json` (`OllamaUrl`, `Model`, `TimeoutSeconds`, `MaxMessages`, `MaxMessageLength`). The frontend widget is `components/ChatWidget.tsx` (floating button, bottom-right of every page).
 
 ## Frontend pages
 `/` (home: one tile per team, sorted by name, with a search box that filters by city or team name) → `/teams/:id` (players on the left, schedule on the right; unknown ids show "Team not found") → `/games/:gameId/scorecard` (score header; game clock with Start/Pause, shot clock with Reset 24/14, and a quarter selector; a player table per team with +2 / +3 buttons; Undo last and Finish game; scoring history at the bottom showing the last 10 plays, expandable), `/players` (filter, click a row for team history), `/games` (All / Previous / Upcoming, team filter, add/delete game). `/teams` redirects to `/`.
